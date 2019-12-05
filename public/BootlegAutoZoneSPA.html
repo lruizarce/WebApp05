@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bootleg AutoZone </title>
+
+</head>
+
+
+<button onclick="fetch('cars', ['name', 'vin','model', 'make_id'])"> Cars</button>
+<button onclick="fetch('parts', ['name'])"> Makes</button>
+<button onclick="fetch('makes', ['name', 'country'])"> Parts</button>
+
+<div id="display">
+</div>
+
+<script>
+    /* Script by Dr. Beaty found here:  https://github.com/drsjb80/SPAs/blob/master/jsspa.html
+    */
+    let d = document.getElementById("display");
+    let clear = function() {
+        while(d.firstChild) {
+            d.removeChild(d.firstChild);
+        }
+    };
+    let post = function() {
+    };
+    let fetch = function(json, id) {
+        let request = new XMLHttpRequest();
+        var url = "http://localhost:3000/" + json + ".json";
+        request.onreadystatechange = function() {
+            if (request.readyState === 4 && request.status === 200) {
+                clear();
+                let arrayOfItems = JSON.parse(request.responseText);
+                for (i in arrayOfItems) {
+                    for (j in id) {
+                        document.getElementById("display").innerHTML += '<li>' + arrayOfItems[i][id[j]] + ' ' + '</li>' + '<br>';
+                    }
+                }
+            }
+        };
+        request.open("GET", url);
+        request.send(null);
+    };
+</script>
+
+</html>
