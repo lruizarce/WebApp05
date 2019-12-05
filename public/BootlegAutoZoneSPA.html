@@ -1,47 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Bootleg AutoZone </title>
-
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
 </head>
+<body>
 
 
-<button onclick="fetch('cars', ['name', 'vin','model', 'make_id'])"> Cars</button>
-<button onclick="fetch('parts', ['name'])"> Makes</button>
-<button onclick="fetch('makes', ['name', 'country'])"> Parts</button>
+<button onclick="fetch('cars', ['name','model'])"> Cars</button>
+<button onclick="fetch('parts', ['name'])"> Parts</button>
+<button onclick="fetch('makes', ['name'])"> Makes</button>
 
-<div id="display">
+<div id="list">
 </div>
 
 <script>
-    /* Script by Dr. Beaty found here:  https://github.com/drsjb80/SPAs/blob/master/jsspa.html
-    */
-    let d = document.getElementById("display");
-    let clear = function() {
-        while(d.firstChild) {
-            d.removeChild(d.firstChild);
-        }
-    };
-    let post = function() {
-    };
-    let fetch = function(json, id) {
-        let request = new XMLHttpRequest();
-        var url = "http://localhost:3000/" + json + ".json";
-        request.onreadystatechange = function() {
-            if (request.readyState === 4 && request.status === 200) {
-                clear();
-                let arrayOfItems = JSON.parse(request.responseText);
-                for (i in arrayOfItems) {
-                    for (j in id) {
-                        document.getElementById("display").innerHTML += '<li>' + arrayOfItems[i][id[j]] + ' ' + '</li>' + '<br>';
+    var fetch = function(which, fields) {
+        $("#list").empty();
+        $.get("http://localhost:3000/" + which + ".json", true)
+            .done(function(json) {
+                for (item in json) {
+                    lis = "<li>";
+                    for (field in fields) {
+                        lis += json[item][fields[field]] + " ";
                     }
+                    lis += "</li>";
+                    $("#list").append(lis);
                 }
-            }
-        };
-        request.open("GET", url);
-        request.send(null);
+            })
+            .fail(function(json){ console.log("fail"); })
     };
 </script>
 
+</body>
 </html>
